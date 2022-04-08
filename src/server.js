@@ -2,9 +2,6 @@ require('dotenv').config();
 const Hapi = require('@hapi/hapi');
 const extensions = require('../extensions');
 const routess = require('./Allroutes');
-const ClientError = require('./exceptions/ClientError');
-const BadRequest = require('./exceptions/ClientError/BadRequest');
-const ServerError = require('./exceptions/ServerError');
 
 const init = async () => {
   const server = Hapi.server({

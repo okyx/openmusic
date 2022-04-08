@@ -13,6 +13,6 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'no-underscore-dangle': 'off',
-    'quote-props': 'as-needed',
+    "quotes": ["single", "double"],
   },
 };
