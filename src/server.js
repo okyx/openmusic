@@ -1,6 +1,7 @@
 require('dotenv').config();
 const Hapi = require('@hapi/hapi');
-const extensions = require('../extensions');
+const Jwt = require('@hapi/jwt');
+const extensions = require('./extensions');
 const routess = require('./Allroutes');
 
 const init = async () => {
@@ -13,6 +14,28 @@ const init = async () => {
       },
     },
   });
+
+  await server.register([
+    {
+      plugin: Jwt,
+    },
+  ]);
+  server.auth.strategy('openmusic_jwt', 'jwt', {
+    keys: process.env.ACCESS_TOKEN_KEY,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+      maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+    },
+    validate: (artifact) => ({
+      isValid: true,
+      credentials: {
+        id: artifact.decoded.payload.id,
+      },
+    }),
+  });
+
   await server.register(routess);
   server.ext('onPreResponse', extensions.onPreResponse);
   await server.start();

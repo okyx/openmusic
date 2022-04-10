@@ -1,7 +1,7 @@
 const extensions = {
   onPreResponse: (request, h) => {
     const { response } = request;
-    if (response instanceof Error) {
+    if (response instanceof Error && response.statusCode) {
       const newResponse = h.response({
         status: response.status,
         message: response.message,
