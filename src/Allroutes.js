@@ -1,3 +1,5 @@
+const path = require('path');
+
 const Albums = require('./api/albums');
 const AlbumService = require('./services/albumService');
 const AlbumValidator = require('./validations/albums');
@@ -30,6 +32,18 @@ const CollaborationService = require('./services/collaborationService');
 const Activities = require('./api/activities');
 const ActivityService = require('./services/Activities');
 
+const Exports = require('./api/exports');
+const ExportsValidator = require('./validations/exports');
+const exportService = require('./services/exportsService');
+
+const UploadValidator = require('./validations/uploads');
+const StorageService = require('./services/StorageService');
+
+const AlbumLike = require('./api/albumLikes');
+const AlbumLikeService = require('./services/AlbumLikesService');
+
+const CacheService = require('./services/CacheService');
+
 const albumService = new AlbumService();
 const songService = new SongService();
 const userService = new UserService();
@@ -38,6 +52,9 @@ const playlistsSongService = new PlaylistSongService();
 const collaborationService = new CollaborationService();
 const playlistService = new PlaylistService(collaborationService);
 const activitiesService = new ActivityService();
+const storageService = new StorageService(path.resolve(__dirname, 'api', 'albums', 'file', 'images'));
+const albumLikeService = new AlbumLikeService();
+const cacheService = new CacheService();
 
 const routess = [
   {
@@ -45,6 +62,8 @@ const routess = [
     options: {
       service: albumService,
       validator: AlbumValidator,
+      UploadValidator,
+      storageService,
     },
   },
   {
@@ -101,6 +120,22 @@ const routess = [
     options: {
       service: activitiesService,
       playlistService,
+    },
+  },
+  {
+    plugin: Exports,
+    options: {
+      service: exportService,
+      validator: ExportsValidator,
+      playlistService,
+    },
+  },
+  {
+    plugin: AlbumLike,
+    options: {
+      service: albumLikeService,
+      albumService,
+      cacheService,
     },
   },
 ];
